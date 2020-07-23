@@ -39,9 +39,9 @@ def evaluate(model, loss_fn, dataloader, metrics, params):
     # compute metrics over the dataset
     for data_batch, labels_batch in dataloader:
 
-        # move to GPU if available
+        # move to GPU if available, async keyword replace non_blocking upper pyhon 3.7
         if params.cuda:
-            data_batch, labels_batch = data_batch.cuda(async=True), labels_batch.cuda(async=True)
+            data_batch, labels_batch = data_batch.cuda(non_blocking=True), labels_batch.cuda(non_blocking=True)
         # fetch the next evaluation batch
         data_batch, labels_batch = Variable(data_batch), Variable(labels_batch)
         
@@ -71,6 +71,7 @@ This function duplicates "evaluate()" but ignores "loss_fn" simply for speedup p
 Validation loss during KD mode would display '0' all the time.
 One can bring that info back by using the fetched teacher outputs during evaluation (refer to train.py)
 """
+
 def evaluate_kd(model, dataloader, metrics, params):
     """Evaluate the model on `num_steps` batches.
 
@@ -92,9 +93,9 @@ def evaluate_kd(model, dataloader, metrics, params):
     # compute metrics over the dataset
     for i, (data_batch, labels_batch) in enumerate(dataloader):
 
-        # move to GPU if available
+        # move to GPU if available, async keyword replace non_blocking upper pyhon 3.7
         if params.cuda:
-            data_batch, labels_batch = data_batch.cuda(async=True), labels_batch.cuda(async=True)
+            data_batch, labels_batch = data_batch.cuda(non_blocking=True), labels_batch.cuda(non_blocking=True)
         # fetch the next evaluation batch
         data_batch, labels_batch = Variable(data_batch), Variable(labels_batch)
         
